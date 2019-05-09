@@ -30,6 +30,18 @@ typedef struct MENUSET{
 	char sel;
 	std::string desc;
 } MENUSET;
+enum AppContext : size_t {
+	APP_INIT	= 0b0,	//Application startup
+	MAINMENU	= 0b10,	//The initial menu
+	LOGINMEMU	= 0b11,	//User's logged in menu
+	USERAUTH	= 0b100,	//User login prompt
+	ACT_SIGNUP	= 0b101,	//User account creation prompt
+	ACT_SUBFUND	= 0b1000,	//Withdraw from account screen
+	ACT_ADDFUND	= 0b1001,	//Deposit to account screen
+	LOAN_ACT	= 0b1,	//Loan application for existing users
+	LOAN_NEW	= 0b1,	//Loan application for new users
+	APP_TERM	= 0b1,	//Graceful shutdown process
+} context;
 
 // global variable (use this variable to store the user’s menu selection)
 char menuInput;
@@ -41,6 +53,7 @@ struct termios *TERM_SETTINGS;
 
 // the main function
 int main(){
+	context = APP_INIT;
 	// Initialise our account access manager
 
 	// Setup our menu options
@@ -61,11 +74,18 @@ int main(){
 		<< std::endl;
 
 	// call the function start
+	context = MAINMENU;
 	start();
+	if (context == APP_TERM) {
 	std::cout
 		<< "Thanks for stopping by!"
 		<< std::endl;
 	return 0;
+	}
+	else {
+		std::cout << "";
+		return -1 & context;
+	}
 }
 
 void printIntroMenu(){
@@ -202,10 +222,11 @@ void login(){
 			printError("UNKNOWN SYSTEM ERROR", 5);
 		}
 	}
-	else{
+	else while(context == LOGINMEMU){
 		printMainMenu();
 
 	umenu_prompt:
+		std::cout << "] ";
 		std::cin >> menuInput;
 
 		switch(menuInput){
@@ -220,30 +241,104 @@ void login(){
 		}
 	}
 }
+
 void loanApplication(){
 
 }
+
+/*	​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═
+	Outputs a given character the specified number of times.
+	​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═
+
+	Arguments:
+	​• char character
+		The character to be repeatedly output on the screen.
+
+	• size_t cx
+		The number of times to output the character.
+	​
+	─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​
+*/
 void printLoop(char character, size_t cx){
 	for(; cx != 0; cx--){
 		std::cout << character;
 	}
 }
-void printError(std::string errorMessage, int8_t duration){
+//TODO: Generics?
+/*	​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═
+	Outputs a given string the specified number of times.
+	​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═
+
+	Arguments:
+	​• std::string text
+		The string to be repeatedly output on the screen.
+
+	• size_t cx
+		The number of times to output the string.
+	​
+	─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​
+*/
+void printLoop(std::string text, size_t cx) {
+	for (; cx != 0; cx--) {
+		std::cout << text;
+	}
+}
+
+/*	​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═
+	Displays an error message to the screen.
+	​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═
+
+	Arguments:
+	​• std::string errorMessage
+		The error message to be output on the screen.
+	​
+	─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​
+	
+	Note: This subroutine clears the entire screen from the second row
+	onward. It does not wait for an amount of time, meaning that the message
+	may be invisible to the user if the screen is blanked or the error
+	message output is overwritten. Nor does this subroutine leave the cursor
+	in a guaranteed location.
+	​
+	If you want to display an error for a specific period of time, use
+	printError(std::string message, int8_t duration);
+*/
+void printError(std::string errorMessage) {
 	size_t offset = TERM_WIDTH / 2 - errorMessage.length() / 2;
 
 	std::cout << MCR(2, 0) CLD MCR(6, 0) RED;
 	//std::cout << errorMessage.find_last_of(' ', errorMessage.length()/2);
 
-	printLoop(' ', offset);
-	printLoop('*', errorMessage.length() + 4);
-	std::cout << "\n";
-	printLoop(' ', offset);
-	std::cout << "* " << errorMessage << " *\n";
-	printLoop(' ', offset);
-	printLoop('*', errorMessage.length() + 4);
+	std::cout << CSI << offset << "c╔"; //ex: "\e[5c" move forward by 5 cols
+	printLoop('═​', errorMessage.length() + 4);
+	std::cout << "╗\n" << offset << "║";
+	std::cout << "║ " << errorMessage << " ║\n╚";
+	printLoop('═​', errorMessage.length() + 4);
+	std::cout << "╝\n\n";
 
 	std::flush(std::cout);
+}
 
+/*	​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═
+	Displays an error message to the screen for the specified time in seconds
+	​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═
+
+	Arguments:
+	​• std::string errorMessage
+		The error message to be output on the screen.
+	
+	​• uint8_t duration
+		The amount of time to display the error message on screen, before
+		blanking and returning the terminal to a guarenteed state.
+	​
+	─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​
+	
+	Note: This subroutine clears the entire screen from the second row
+	onward. The terminal cursor is guaranteed to be left at the beginning of
+	the second row.
+*/
+void printError(std::string errorMessage, int8_t duration){
+	printError(errorMessage);
 	std::this_thread::sleep_for(std::chrono::seconds(duration));
 
 	std::cout << RST MCR(2, 0) CLD;
