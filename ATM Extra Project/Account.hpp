@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <string>
 #include <cstdint>
-#include "atmstatus.hpp"
+#include "ATM_STATUS.hpp"
 
 class Account{
 public:

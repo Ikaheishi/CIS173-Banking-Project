@@ -4,8 +4,8 @@
 #include <list>
 #include <unordered_map>
 #include <cstdint>
-#include "account.hpp"
-#include "atmstatus.hpp"
+#include "Account.hpp"
+#include "ATM_STATUS.hpp"
 class AccountManager {
 public:
 	Account *current;

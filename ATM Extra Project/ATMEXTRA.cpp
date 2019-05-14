@@ -13,8 +13,8 @@
 //#include <termios.h>
 //#include <unistd.h>
 
-#include "account.hpp"
-#include "actmanager.hpp"
+#include "Account.hpp"
+#include "ActManager.hpp"
 
 // function prototypes
 void printIntroMenu();

@@ -1,6 +1,6 @@
 ﻿#include "utils.hpp"
-#include "account.hpp"
-#include "atmstatus.hpp"
+#include "Account.hpp"
+#include "ATM_STATUS.hpp"
 
 Account::Account(uint64_t accountID, std::string* passcode) {
 	id = accountID;
