@@ -147,7 +147,7 @@ void start(){
 			loanApplication();
 			break;
 			#include "./includes/debug_opts.cpp"
-		default:
+		default: //Got an invalid input
 			std::cout << CSI "1F" CLN;
 			goto imenu_prompt;
 			// Break, while skipping menu output (it's still visible)
@@ -223,22 +223,26 @@ void login(){
 			printError("UNKNOWN SYSTEM ERROR", 5);
 		}
 	}
-	else while(context == LOGINMEMU){
-		printMainMenu();
+	else{
+		context = LOGINMEMU;
+		std::cout << MCR(2, 1) CLD;
+		while (context == LOGINMEMU) {
+			printMainMenu();
 
-	umenu_prompt:
-		std::cout << "] ";
-		std::cin >> menuInput;
+		umenu_prompt:
+			std::cout << "] ";
+			std::cin >> menuInput;
 
-		switch(menuInput){
-		case 'W':
-		case 'D':
-		case 'Q':
+			switch (menuInput) {
+			case 'W':
+			case 'D':
+			case 'Q':
 
-		default:
-			std::cout << CSI "1F" CLN;
-			goto umenu_prompt;
-			// Break, while skipping menu output (it's still visible)
+			default: //Got an invalid input
+				std::cout << CSI "1F" CLN;
+				goto umenu_prompt;
+				// Break, while skipping menu output (it's still visible)
+			}
 		}
 	}
 }
