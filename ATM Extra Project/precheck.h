@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "macros.h"
 
 // Check for C++ support

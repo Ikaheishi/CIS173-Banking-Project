@@ -1,4 +1,4 @@
-#include "actmanager.hpp"
+﻿#include "actmanager.hpp"
 #include <cstdint>
 #include <stdexcept>
 #include <string>

@@ -1,4 +1,4 @@
-/** macros.h
+﻿/** macros.h
  *	Preprocessor macro definitions that are (more) commonly used throughout the program.
  */
 

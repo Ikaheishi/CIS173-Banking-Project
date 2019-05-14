@@ -1,4 +1,4 @@
-			case 'I':
+﻿			case 'I':
 				std::cout
 					<< "ATMEXTRA.CPP" << std::endl
 					<< "COMPILED ON " __DATE__ " AT " __TIME__ << std::endl

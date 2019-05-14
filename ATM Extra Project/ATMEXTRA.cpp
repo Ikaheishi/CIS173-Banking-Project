@@ -1,10 +1,11 @@
-#include "macros.h"
+﻿#include "macros.h"
 #include "precheck.h"
 
 #include <iostream>
 #include <cstdio>
 #include <vector>
 #include <cstdint>
+#include <type_traits>
 
 #include <chrono>
 #include <thread>
@@ -185,7 +186,7 @@ void createAccount(){
 	std::cin >> passcode;
 	sys_status = accounts.createUser(accountID, &passcode);
 	if(sys_status != ATM_STATUS::SUCCESS){
-		printError("ERROR", 5);
+		printError("ERROR " + static_cast<std::underlying_type<ATM_STATUS>::type>(sys_status), 5);
 	}
 }
 
@@ -259,7 +260,7 @@ void loanApplication(){
 	​
 	─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​
 */
-void printLoop(char character, size_t cx){
+void printLoop(char16_t character, size_t cx){
 	for(; cx != 0; cx--){
 		std::cout << character;
 	}
@@ -310,10 +311,10 @@ void printError(std::string errorMessage) {
 	//std::cout << errorMessage.find_last_of(' ', errorMessage.length()/2);
 
 	std::cout << CSI << offset << "c╔"; //ex: "\e[5c" move forward by 5 cols
-	printLoop('═​', errorMessage.length() + 4);
+	printLoop('═', errorMessage.length() + 4);
 	std::cout << "╗\n" << offset << "║";
 	std::cout << "║ " << errorMessage << " ║\n╚";
-	printLoop('═​', errorMessage.length() + 4);
+	printLoop('═', errorMessage.length() + 4);
 	std::cout << "╝\n\n";
 
 	std::flush(std::cout);
