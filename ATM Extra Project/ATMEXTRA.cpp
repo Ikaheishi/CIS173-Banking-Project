@@ -269,7 +269,7 @@ void printLoop(char16_t character, size_t cx){
 		std::cout << character;
 	}
 }
-//TODO: Generics?
+//TODO: Reimplement `printLoop()` via the concept of generics?
 /*	​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═
 	Outputs a given string the specified number of times.
 	​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═
@@ -314,12 +314,15 @@ void printError(std::string errorMessage) {
 	std::cout << MCR(2, 0) CLD MCR(6, 0) RED;
 	//std::cout << errorMessage.find_last_of(' ', errorMessage.length()/2);
 
-	std::cout << CSI << offset << "c╔"; //ex: "\e[5c" move forward by 5 cols
-	printLoop('═', errorMessage.length() + 4);
-	std::cout << "╗\n" << offset << "║";
-	std::cout << "║ " << errorMessage << " ║\n╚";
-	printLoop('═', errorMessage.length() + 4);
-	std::cout << "╝\n\n";
+	std::cout << CSI << offset << ANSI_CODE_CHA CHR_BORDER_CORNER_TL; //ex: "\e[5C" move forward by 5 cols
+	printLoop(CHR_BORDER_TOP, errorMessage.length() + 2);
+	std::cout << CHR_BORDER_CORNER_TR "\n" CSI << offset << ANSI_CODE_CHA;
+
+	std::cout << CHR_BORDER_LEFT " " << errorMessage << " " CHR_BORDER_RIGHT "\n";
+	
+	std::cout << CSI << offset << ANSI_CODE_CHA CHR_BORDER_CORNER_BL;
+	printLoop(CHR_BORDER_BOTTOM, errorMessage.length() + 2);
+	std::cout << CHR_BORDER_CORNER_BR "\n\n" RST;
 
 	std::flush(std::cout);
 }
