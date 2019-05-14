@@ -164,15 +164,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Account.hpp" />
-    <ClInclude Include="actmanager.hpp" />
-    <ClInclude Include="atmstatus.hpp" />
+    <ClInclude Include="ActManager.hpp" />
+    <ClInclude Include="ATM_STATUS.hpp" />
     <ClInclude Include="macros.h" />
     <ClInclude Include="precheck.h" />
     <ClInclude Include="utils.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Account.cpp" />
-    <ClCompile Include="actmanager.cpp" />
+    <ClCompile Include="ActManager.cpp" />
     <ClCompile Include="ATMEXTRA.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
