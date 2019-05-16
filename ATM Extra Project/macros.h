@@ -15,63 +15,34 @@
 //	ANSI escape Sequences
 //============================================
 
-//Command Sequence Inducer
-#define ANSI_CSI "\033["
+#include <ANSI_Escapes.h>
 
+//[LEGACY] Control Sequence Introducer
 #define CSI ANSI_CSI
-//#define CSI "\e["
 
-//ReSeT text formatting
-#define RST CSI "0m"
+//[LEGACY] ReSeT text formatting
+#define RST ANSI_SGR()
 
-//BoLD face
-#define BLD CSI "1m"
+//[LEGACY] BoLD face
+#define BLD ANSI_SGR(1)
 
-//REVerse video
-#define REV CSI "7m"
+//[LEGACY] REVerse video
+#define REV ANSI_SGR(7)
 
-//BliNKing text
-#define BNK CSI "5m"
+//[LEGACY] BliNKing text
+#define BNK ANSI_SGR(5)
 
-//RED coloured text
-#define RED CSI "31m"
+//[LEGACY] RED coloured text
+#define RED ANSI_SGR(ANSI_SGR_COLOUR(1))
 
-//Clear LiNe
-#define CLN CSI "2K"
+//[LEGACY] Clear LiNe
+#define CLN ANSI_EL(2)
 
-//CLear Down
-#define CLD CSI "0J"
+//[LEGACY] CLear Down
+#define CLD ANSI_ED(0)
 
-//CUrsor Position (ANSI escape sequence H)
-#define ANSI_CUP(row,col) CSI #row ";" #col "H"
-
-//Move CuRsoR 
-#define MCR(row,col) ANSI_CUP(#row,#col)
-
-//Cursor Horizontal Absloute (ANSI escape sequence G)
-#define ANSI_CHA(col) CSI #col "G"
-
-#define ANSI_CODE_CHA "G"
-
-//CUrsor Up (ANSI escape sequence A)
-#define ANSI_CUU(col) CSI #col "A"
-
-#define ANSI_CODE_CUU "A"
-
-//CUrsor Down (ANSI escape sequence B)
-#define ANSI_CUD(col) CSI #col "B"
-
-#define ANSI_CODE_CUD "B"
-
-//CUrsor Forward (ANSI escape sequence C)
-#define ANSI_CUF(col) CSI #col "C"
-
-#define ANSI_CODE_CUF "C"
-
-//CUrsor Back (ANSI escape sequence D)
-#define ANSI_CUB(col) CSI #col "D"
-
-#define ANSI_CODE_CUB "D"
+//[LEGACY] Move CuRsoR 
+#define MCR(row,col) ANSI_CUP(row,col)
 
 //============================================
 //	Non-ASCII characters
