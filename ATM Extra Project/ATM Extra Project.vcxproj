@@ -178,6 +178,7 @@
     <ClCompile Include="InterfaceManager.cpp" />
     <ClCompile Include="InterfaceManager.hpp" />
     <ClCompile Include="utils.cpp" />
+    <ClCompile Include="Windows.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
