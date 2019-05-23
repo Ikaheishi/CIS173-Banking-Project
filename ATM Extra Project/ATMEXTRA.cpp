@@ -7,14 +7,12 @@
 #include <cstdint>
 #include <type_traits>
 
-#include <chrono>
-#include <thread>
-
 //#include <termios.h>
 //#include <unistd.h>
 
 #include "Account.hpp"
 #include "ActManager.hpp"
+#include "InterfaceManager.hpp"
 
 // function prototypes
 void printIntroMenu();
@@ -23,7 +21,6 @@ void start();
 void login();
 void createAccount();
 void loanApplication();
-void printError(std::string errorMessage, int8_t duration);
 
 // class/structure definitions
 typedef struct MENUSET{
@@ -51,6 +48,7 @@ ATM_STATUS sys_status;
 std::vector<MENUSET> OPT_IMENU;
 std::vector<MENUSET> OPT_UMENU;
 struct termios *TERM_SETTINGS;
+InterfaceManager ui;
 
 // the main function
 int main(){
@@ -186,7 +184,7 @@ void createAccount(){
 	std::cin >> passcode;
 	sys_status = accounts.createUser(accountID, &passcode);
 	if(sys_status != ATM_STATUS::SUCCESS){
-		printError("ERROR " + static_cast<std::underlying_type<ATM_STATUS>::type>(sys_status), 5);
+		ui.printError("ERROR " + static_cast<std::underlying_type<ATM_STATUS>::type>(sys_status), 5);
 	}
 }
 
@@ -217,10 +215,10 @@ void login(){
 		switch(sys_status){
 		case ATM_STATUS::ACT_INVALID:
 		case ATM_STATUS::ACT_PASS:
-			printError("ACCOUNT AND PASSWORD DO NOT MATCH", 5);
+			ui.printError("ACCOUNT AND PASSWORD DO NOT MATCH", 5);
 			break;
 		default:
-			printError("UNKNOWN SYSTEM ERROR", 5);
+			ui.printError("UNKNOWN SYSTEM ERROR", 5);
 		}
 	}
 	else{
@@ -251,103 +249,3 @@ void loanApplication(){
 
 }
 
-/*	​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═
-	Outputs a given character the specified number of times.
-	​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═
-
-	Arguments:
-	​• char character
-		The character to be repeatedly output on the screen.
-
-	• size_t cx
-		The number of times to output the character.
-	​
-	─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​
-*/
-void printLoop(char16_t character, size_t cx){
-	for(; cx != 0; cx--){
-		std::cout << character;
-	}
-}
-//TODO: Reimplement `printLoop()` via the concept of generics?
-/*	​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═
-	Outputs a given string the specified number of times.
-	​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═
-
-	Arguments:
-	​• std::string text
-		The string to be repeatedly output on the screen.
-
-	• size_t cx
-		The number of times to output the string.
-	​
-	─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​
-*/
-void printLoop(std::string text, size_t cx) {
-	for (; cx != 0; cx--) {
-		std::cout << text;
-	}
-}
-
-/*	​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═
-	Displays an error message to the screen.
-	​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═
-
-	Arguments:
-	​• std::string errorMessage
-		The error message to be output on the screen.
-	​
-	─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​
-	
-	Note: This subroutine clears the entire screen from the second row
-	onward. It does not wait for an amount of time, meaning that the message
-	may be invisible to the user if the screen is blanked or the error
-	message output is overwritten. Nor does this subroutine leave the cursor
-	in a guaranteed location.
-	​
-	If you want to display an error for a specific period of time, use
-	printError(std::string message, int8_t duration);
-*/
-void printError(std::string errorMessage) {
-	size_t offset = TERM_WIDTH / 2 - errorMessage.length() / 2;
-
-	std::cout << MCR(2, 0) CLD MCR(6, 0) ANSI_SGR(31);
-	//std::cout << errorMessage.find_last_of(' ', errorMessage.length()/2);
-
-	std::cout << ANSI_CSI << offset << ANSI_CSFB_CHA CHR_BORDER_CORNER_TL; //ex: "\e[5C" move forward by 5 cols
-	printLoop(CHR_BORDER_TOP, errorMessage.length() + 2);
-	std::cout << CHR_BORDER_CORNER_TR "\n" ANSI_CSI << offset << ANSI_CSFB_CHA;
-
-	std::cout << CHR_BORDER_LEFT " " << errorMessage << " " CHR_BORDER_RIGHT "\n";
-	
-	std::cout << ANSI_CSI << offset << ANSI_CSFB_CHA CHR_BORDER_CORNER_BL;
-	printLoop(CHR_BORDER_BOTTOM, errorMessage.length() + 2);
-	std::cout << CHR_BORDER_CORNER_BR "\n\n" RST;
-
-	std::flush(std::cout);
-}
-
-/*	​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═
-	Displays an error message to the screen for the specified time in seconds
-	​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═​═
-
-	Arguments:
-	​• std::string errorMessage
-		The error message to be output on the screen.
-	
-	​• uint8_t duration
-		The amount of time to display the error message on screen, before
-		blanking and returning the terminal to a guarenteed state.
-	​
-	─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​─​
-	
-	Note: This subroutine clears the entire screen from the second row
-	onward. The terminal cursor is guaranteed to be left at the beginning of
-	the second row.
-*/
-void printError(std::string errorMessage, int8_t duration){
-	printError(errorMessage);
-	std::this_thread::sleep_for(std::chrono::seconds(duration));
-
-	std::cout << RST MCR(2, 0) CLD;
-}

@@ -175,6 +175,8 @@
     <ClCompile Include="Account.cpp" />
     <ClCompile Include="ActManager.cpp" />
     <ClCompile Include="ATMEXTRA.cpp" />
+    <ClCompile Include="InterfaceManager.cpp" />
+    <ClCompile Include="InterfaceManager.hpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
