@@ -15,13 +15,13 @@
 //	ANSI escape Sequences
 //============================================
 
-#include <ANSI_Escapes.h>
+#include "ECMA-48.h"
 
 //[LEGACY] Control Sequence Introducer
 #define CSI ANSI_CSI
 
 //[LEGACY] ReSeT text formatting
-#define RST ANSI_SGR()
+#define RST ANSI_SGR(0)
 
 //[LEGACY] BoLD face
 #define BLD ANSI_SGR(1)

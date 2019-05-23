@@ -71,7 +71,7 @@ int main(){
 
 	// TO WRITE A WELCOME MESSAGE HERE
 	std::cout
-		<< MCR(1, 1) CLD REV "Welcome to Eroh Family Bank ATM Machine!" RST
+		<< ANSI_CUP(1, 1) ANSI_ED(0) ANSI_SGR(7) "Welcome to Eroh Family Bank ATM Machine!" ANSI_SGR(0)
 		<< std::endl;
 
 	// call the function start
@@ -92,9 +92,9 @@ int main(){
 void printIntroMenu(){
 	for(unsigned short n = 0; n < OPT_IMENU.size(); n++){
 		std::cout
-			<< CSI "7;1m" // Bold & Inverse
+			<< ANSI_SGR(7;1) // Bold & Inverse
 			<< OPT_IMENU.at(n).sel
-			<< RST " -> "
+			<< ANSI_SGR(0) " -> "
 			<< OPT_IMENU.at(n).desc
 			<< std::endl;
 	}
@@ -104,9 +104,9 @@ void printIntroMenu(){
 void printMainMenu(){
 	for(unsigned short n = 0; n < OPT_UMENU.size(); n++){
 		std::cout
-			<< CSI "7;1m" // Bold & Inverse
+			<< ANSI_SGR(7; 1) // Bold & Inverse
 			<< OPT_UMENU.at(n).sel
-			<< RST " -> "
+			<< ANSI_SGR(0) " -> "
 			<< OPT_UMENU.at(n).desc
 			<< std::endl;
 	}
@@ -239,7 +239,7 @@ void login(){
 			case 'Q':
 
 			default: //Got an invalid input
-				std::cout << CSI "1F" CLN;
+				std::cout << ANSI_CPL(1);
 				goto umenu_prompt;
 				// Break, while skipping menu output (it's still visible)
 			}
@@ -311,16 +311,16 @@ void printLoop(std::string text, size_t cx) {
 void printError(std::string errorMessage) {
 	size_t offset = TERM_WIDTH / 2 - errorMessage.length() / 2;
 
-	std::cout << MCR(2, 0) CLD MCR(6, 0) RED;
+	std::cout << MCR(2, 0) CLD MCR(6, 0) ANSI_SGR(31);
 	//std::cout << errorMessage.find_last_of(' ', errorMessage.length()/2);
 
-	std::cout << CSI << offset << ANSI_CODE_CHA CHR_BORDER_CORNER_TL; //ex: "\e[5C" move forward by 5 cols
+	std::cout << ANSI_CSI << offset << ANSI_CSFB_CHA CHR_BORDER_CORNER_TL; //ex: "\e[5C" move forward by 5 cols
 	printLoop(CHR_BORDER_TOP, errorMessage.length() + 2);
-	std::cout << CHR_BORDER_CORNER_TR "\n" CSI << offset << ANSI_CODE_CHA;
+	std::cout << CHR_BORDER_CORNER_TR "\n" ANSI_CSI << offset << ANSI_CSFB_CHA;
 
 	std::cout << CHR_BORDER_LEFT " " << errorMessage << " " CHR_BORDER_RIGHT "\n";
 	
-	std::cout << CSI << offset << ANSI_CODE_CHA CHR_BORDER_CORNER_BL;
+	std::cout << ANSI_CSI << offset << ANSI_CSFB_CHA CHR_BORDER_CORNER_BL;
 	printLoop(CHR_BORDER_BOTTOM, errorMessage.length() + 2);
 	std::cout << CHR_BORDER_CORNER_BR "\n\n" RST;
 
